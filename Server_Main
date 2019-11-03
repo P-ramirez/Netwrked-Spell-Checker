@@ -1,0 +1,47 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
+
+#define PORT 8080
+	 
+//intialize the conition variable and the mutex lock
+pthread_cond_t cond;
+pthread_mutex_t lock;
+
+int main(int argc, char *argv[]){//if argc > 1 then argv[1] hould be a dictionary that the user has
+	int *client_socket_fd = (int*)malloc(sizeof(int)*100); //set an array for client socketfd'sbrk
+	//Load in the dictionary through a fopen
+	FILE* dictionary = fopen(dictionary, 'r');
+	
+	//CREATE POOL OF WORKER THREADS - this will be checked to make 
+	pthread_t *thread_pool = (pthread_t*)malloc(sizeof(pthread_t)*10);
+	pthread_create(&thread_pool
+	 
+	
+	//SETTING UP THE NETWORK
+	sockaddr_in client, server;
+	int server_fd;
+	if((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1){
+		puts("Error in creating socket!");
+	}
+	//setting up the server socket
+	server.sin_family = AF_INET;
+	server.sin_addr = INADD_ANY;
+	server.sin_port_htons = htons(portNumber);//must define portNumber mysef
+	//binding the server socket address to the socket descriptor
+	bind(server_fd, (sockaddr*)&server, sizeof(server));
+	//set the server to listen for the clients
+	listen(server_fd 3);
+	
+	//START THE LOOP TO ACCEPT NEW SOCKETS AND PROCESS THEM
+	while(1){
+		if(accept(server_fd, client, sizeof(sockaddr_in)) > 0){//if the accept value returns a non negative number
+			pthread_t process;
+			pthread_create(&process, NULL, workerMethod, NULL);
+		}
+	}
+}

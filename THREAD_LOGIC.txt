@@ -1,0 +1,34 @@
+*open => need consumers, buffer is full
+*closed => need producers, buffer is empty
+
+Main Thread --> Client Producer:
+-Lock the Client Buffer
+-if the Client Buffer is full unlock the Client Buffer wait on for signal on "open"
+-accept a new socket descriptor
+-add socket descriptor to the client buffer
+-increment client buffer size
+-unlock the client buffer
+-signal "closed"
+
+Worker Thread -> Client Consumer
+-lock the client buffer
+-lock the phrase buffer
+-if the client buffer is empty unlock the Client Buffer wait on for signal on "closed"
+-read/remove word from client
+-decrement size of client buffer
+-check the correctness of word and create a phrase to send to the client
+Worker Thread -> Phrase Writer
+-if the phrase buffer is full unlock the Phrase Buffer wait on for signal on "open"
+-write phrase, the phrase w/correctness to buffer
+-increment the phrase buffer size
+-unlock the phrase buffer
+-signal "close"
+
+Log Writing Thread -> Phrase Reader
+-lock the phrase buffer
+-if the phrase is empty unlock the phrase buffer and wait on for signal on "close"
+-read/remove phrase from buffer
+-decrement buffer size
+-write phrase to the Log File (*will open file pointer as a global*)
+-unlock the phrase buffer
+-signal "open"
